@@ -4,6 +4,12 @@
 
 사내 공용 MCP 서버로, 일정/이메일/회의실 등 기업 협업 API를 통합하여 제공합니다.
 
+## 기술 스택
+
+- **FastMCP**: FastAPI 스타일의 데코레이터 기반 MCP 서버 프레임워크
+- **Pydantic**: 타입 안전성과 데이터 검증
+- **Python 3.10+**: 최신 Python 기능 활용
+
 ## 개요
 
 이 MCP 서버는 다양한 사내 협업 도구들을 하나의 통합된 인터페이스로 제공합니다:
@@ -240,6 +246,27 @@ pytest
 
 현재 프로젝트는 **스켈레톤 구조**만 구성되어 있습니다. 각 핸들러 함수는 `NotImplementedError`를 발생시킵니다.
 
+### FastMCP 사용법
+
+이 프로젝트는 FastMCP를 사용하여 간결한 코드로 MCP 서버를 구현합니다:
+
+```python
+# 기존 MCP SDK 방식 (복잡함)
+@app.call_tool()
+async def call_tool(name: str, arguments: Any) -> Any:
+    # 수동으로 라우팅 로직 구현 필요
+    if name == "meetings.create":
+        return await create_meeting(**arguments)
+    # ...
+
+# FastMCP 방식 (간단함)
+@mcp.tool()
+async def create_meeting(params: CreateMeetingRequest) -> Meeting:
+    """Create a new calendar event/meeting."""
+    # Pydantic 모델이 자동으로 JSON Schema로 변환됨
+    # 함수 시그니처와 docstring이 자동으로 툴 정의가 됨
+```
+
 ### 구현 순서
 
 1. **인증 구현** (`config/settings.py`)
@@ -252,6 +279,7 @@ pytest
 3. **핸들러 구현**
    - `namespaces/*/handlers.py` 파일의 각 함수 구현
    - API 응답을 타입 모델로 변환
+   - Pydantic 모델을 파라미터로 사용하면 FastMCP가 자동으로 검증
 
 4. **정책 검증**
    - `policies` 네임스페이스의 정책 검증 로직 구현
@@ -271,14 +299,48 @@ pytest
 
 1. `src/corp_collab_mcp/namespaces/` 아래에 새 디렉토리 생성
 2. `types.py`, `handlers.py`, `__init__.py` 파일 생성
-3. `server.py`에 툴 정의 추가
-4. 라우팅 로직 추가
+3. `server.py`의 `register_namespaces()` 함수에 툴 등록 추가
+
+예시:
+```python
+# server.py
+def register_namespaces() -> None:
+    from corp_collab_mcp.namespaces import new_namespace
+
+    mcp.tool()(new_namespace.handlers.some_function)
+```
 
 ### 새 Tool 추가
 
-1. 해당 네임스페이스의 `types.py`에 요청/응답 타입 정의
-2. `handlers.py`에 핸들러 함수 구현
-3. `server.py`의 `TOOLS` 리스트에 Tool 정의 추가
+FastMCP를 사용하면 매우 간단합니다:
+
+1. 해당 네임스페이스의 `types.py`에 Pydantic 모델 정의
+2. `handlers.py`에 async 함수 구현
+3. `server.py`에서 `mcp.tool()` 데코레이터로 등록
+
+예시:
+```python
+# namespaces/meetings/types.py
+class CreateMeetingRequest(BaseModel):
+    title: str
+    attendees: list[str]
+    time_range: TimeRange
+
+# namespaces/meetings/handlers.py
+async def create_meeting(params: CreateMeetingRequest) -> Meeting:
+    """Create a new calendar event/meeting."""
+    # 구현...
+    pass
+
+# server.py
+mcp.tool()(meetings.handlers.create_meeting)
+```
+
+FastMCP가 자동으로:
+- 함수 이름을 툴 이름으로 변환 (create_meeting)
+- Docstring을 툴 설명으로 사용
+- Pydantic 모델을 JSON Schema로 변환
+- 타입 검증 및 변환 처리
 
 ## 라이선스
 
