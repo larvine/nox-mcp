@@ -3,6 +3,7 @@
 import json
 import logging
 import sys
+import traceback
 from datetime import datetime
 from enum import Enum
 from typing import Any
@@ -68,3 +69,22 @@ class Logger:
     def error(self, message: str, meta: dict[str, Any] | None = None) -> None:
         """Log error message."""
         self._log(LogLevel.ERROR, message, meta)
+
+    def exception(self, message: str, meta: dict[str, Any] | None = None) -> None:
+        """Log exception with traceback details."""
+        exception_meta: dict[str, Any] = {}
+        if meta:
+            exception_meta.update(meta)
+
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        if exc_type and exc_traceback:
+            exception_meta.setdefault(
+                "exception",
+                {
+                    "type": exc_type.__name__,
+                    "message": str(exc_value),
+                    "traceback": traceback.format_tb(exc_traceback),
+                },
+            )
+
+        self._log(LogLevel.ERROR, message, exception_meta or None)
