@@ -128,6 +128,26 @@ class Settings(BaseSettings):
         description="레이트리밋 기능 사용",
     )
 
+    # WebSocket Server Configuration
+    ws_host: str = Field(
+        default="0.0.0.0",
+        validation_alias="WS_HOST",
+        json_schema_extra={"example": "0.0.0.0"},
+        description="WebSocket 서버 호스트",
+    )
+    ws_port: int = Field(
+        default=8765,
+        validation_alias="WS_PORT",
+        json_schema_extra={"example": 8765, "unit": "port"},
+        description="WebSocket 서버 포트",
+    )
+    transport: str = Field(
+        default="ws",
+        validation_alias="TRANSPORT",
+        json_schema_extra={"enum": ["stdio", "ws"], "example": "ws"},
+        description="통신 방식 (stdio 또는 ws)",
+    )
+
 
 @lru_cache()
 def get_settings() -> Settings:

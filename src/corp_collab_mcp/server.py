@@ -131,13 +131,21 @@ def register_namespaces() -> None:
 def main() -> None:
     """Main entry point."""
     settings = get_settings()
-    logger.info("Starting Corp Collab MCP Server", {"version": "1.0.0"})
+    logger.info("Starting Corp Collab MCP Server", {"version": "1.0.0", "transport": settings.transport})
 
     # Register all namespaces
     register_namespaces()
 
     logger.info("Registered successfully", {"version": "1.0.0"})
-    mcp.run()
+
+    if settings.transport == "ws":
+        logger.info(f"Starting WebSocket server on {settings.ws_host}:{settings.ws_port}")
+        # Run with WebSocket transport
+        mcp.run(transport="ws", host=settings.ws_host, port=settings.ws_port)
+    else:
+        logger.info("Starting with stdio transport")
+        # Run with stdio transport (default)
+        mcp.run()
 
 
 if __name__ == "__main__":
