@@ -64,26 +64,26 @@ async def delete_draft(draft_id: str) -> None:
     raise NotImplementedError("mail.deleteDraft not yet implemented")
 
 
-@mcp.resource(name="mail.get_email", description="Retrieve an email by its identifier.")
-async def get_email(email_id: str) -> Email:
-    """
-    mail.get
-    Get email by ID.
-    """
-    logger.info("Getting email", {"email_id": email_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("mail.get not yet implemented")
+# @mcp.resource(name="mail.get_email", description="Retrieve an email by its identifier.")
+# async def get_email(email_id: str) -> Email:
+#     """
+#     mail.get
+#     Get email by ID.
+#     """
+#     logger.info("Getting email", {"email_id": email_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("mail.get not yet implemented")
 
 
-@mcp.resource(name="mail.get_thread", description="Retrieve an email thread.")
-async def get_thread(thread_id: str) -> EmailThread:
-    """
-    mail.getThread
-    Get email thread.
-    """
-    logger.info("Getting thread", {"thread_id": thread_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("mail.getThread not yet implemented")
+# @mcp.resource(name="mail.get_thread", description="Retrieve an email thread.")
+# async def get_thread(thread_id: str) -> EmailThread:
+#     """
+#     mail.getThread
+#     Get email thread.
+#     """
+#     logger.info("Getting thread", {"thread_id": thread_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("mail.getThread not yet implemented")
 
 
 @mcp.tool(name="mail.search_emails", description="Search emails using a query.")

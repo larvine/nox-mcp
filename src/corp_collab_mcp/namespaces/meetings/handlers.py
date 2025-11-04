@@ -19,15 +19,15 @@ async def create_meeting(params: CreateMeetingRequest) -> Meeting:
     raise NotImplementedError("meetings.create not yet implemented")
 
 
-@mcp.resource(name="meetings.get_meeting", description="Get meeting details by ID.")
-async def get_meeting(meeting_id: str) -> Meeting:
-    """
-    meetings.get
-    Get meeting details by ID.
-    """
-    logger.info("Getting meeting", {"meeting_id": meeting_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("meetings.get not yet implemented")
+# @mcp.resource(name="meetings.get_meeting", description="Get meeting details by ID.")
+# async def get_meeting(meeting_id: str) -> Meeting:
+#     """
+#     meetings.get
+#     Get meeting details by ID.
+#     """
+#     logger.info("Getting meeting", {"meeting_id": meeting_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("meetings.get not yet implemented")
 
 
 @mcp.tool(name="meetings.update_meeting", description="Update an existing meeting.")

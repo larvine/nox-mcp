@@ -20,15 +20,15 @@ async def create_task(params: CreateTaskRequest) -> Task:
     raise NotImplementedError("tasks.create not yet implemented")
 
 
-@mcp.resource(name="tasks.get_task", description="Retrieve a task by identifier.")
-async def get_task(task_id: str) -> Task:
-    """
-    tasks.get
-    Get task by ID.
-    """
-    logger.info("Getting task", {"task_id": task_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("tasks.get not yet implemented")
+# @mcp.resource(name="tasks.get_task", description="Retrieve a task by identifier.")
+# async def get_task(task_id: str) -> Task:
+#     """
+#     tasks.get
+#     Get task by ID.
+#     """
+#     logger.info("Getting task", {"task_id": task_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("tasks.get not yet implemented")
 
 
 @mcp.tool(name="tasks.update_task", description="Update fields on an existing task.")

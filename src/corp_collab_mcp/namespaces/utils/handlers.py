@@ -21,26 +21,26 @@ async def convert_timezone(dt: str, from_tz: str, to_tz: str) -> str:
     raise NotImplementedError("utils.convertTimezone not yet implemented")
 
 
-@mcp.resource(name="utils.get_timezone_info", description="Get metadata about a timezone.")
-async def get_timezone_info(timezone: str) -> TimezoneInfo:
-    """
-    utils.getTimezoneInfo
-    Get timezone information.
-    """
-    logger.info("Getting timezone info", {"timezone": timezone})
-    # TODO: Implement timezone info retrieval
-    raise NotImplementedError("utils.getTimezoneInfo not yet implemented")
+# @mcp.resource(name="utils.get_timezone_info", description="Get metadata about a timezone.")
+# async def get_timezone_info(timezone: str) -> TimezoneInfo:
+#     """
+#     utils.getTimezoneInfo
+#     Get timezone information.
+#     """
+#     logger.info("Getting timezone info", {"timezone": timezone})
+#     # TODO: Implement timezone info retrieval
+#     raise NotImplementedError("utils.getTimezoneInfo not yet implemented")
 
 
-@mcp.resource(name="utils.list_timezones", description="List all supported timezone identifiers.")
-async def list_timezones() -> list[str]:
-    """
-    utils.listTimezones
-    List all available timezones.
-    """
-    logger.info("Listing timezones")
-    # TODO: Implement timezone listing
-    raise NotImplementedError("utils.listTimezones not yet implemented")
+# @mcp.resource(name="utils.list_timezones", description="List all supported timezone identifiers.")
+# async def list_timezones() -> list[str]:
+#     """
+#     utils.listTimezones
+#     List all available timezones.
+#     """
+#     logger.info("Listing timezones")
+#     # TODO: Implement timezone listing
+#     raise NotImplementedError("utils.listTimezones not yet implemented")
 
 
 @mcp.tool(name="utils.generate_ics", description="Generate ICS calendar file content for an event.")
@@ -65,16 +65,16 @@ async def parse_ics(ics_content: str) -> list[ICSEvent]:
     raise NotImplementedError("utils.parseICS not yet implemented")
 
 
-@mcp.resource(name="utils.health_check", description="Check health status of backend services.")
-async def health_check() -> HealthCheck:
-    """
-    utils.healthCheck
-    Check health status of all services.
-    """
-    logger.info("Performing health check")
-    # TODO: Implement health check
-    # Check connectivity to all backend services
-    raise NotImplementedError("utils.healthCheck not yet implemented")
+# @mcp.resource(name="utils.health_check", description="Check health status of backend services.")
+# async def health_check() -> HealthCheck:
+#     """
+#     utils.healthCheck
+#     Check health status of all services.
+#     """
+#     logger.info("Performing health check")
+#     # TODO: Implement health check
+#     # Check connectivity to all backend services
+#     raise NotImplementedError("utils.healthCheck not yet implemented")
 
 
 @mcp.tool(name="utils.generate_idempotency_key", description="Generate an idempotency key for an operation.")

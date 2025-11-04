@@ -25,26 +25,26 @@ async def search_rooms(params: SearchRoomsRequest) -> list[MeetingRoom]:
     raise NotImplementedError("rooms.search not yet implemented")
 
 
-@mcp.resource(name="rooms.get_room", description="Get meeting room details by identifier.")
-async def get_room(room_id: str) -> MeetingRoom:
-    """
-    rooms.get
-    Get room details by ID.
-    """
-    logger.info("Getting room", {"room_id": room_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("rooms.get not yet implemented")
+# @mcp.resource(name="rooms.get_room", description="Get meeting room details by identifier.")
+# async def get_room(room_id: str) -> MeetingRoom:
+#     """
+#     rooms.get
+#     Get room details by ID.
+#     """
+#     logger.info("Getting room", {"room_id": room_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("rooms.get not yet implemented")
 
 
-@mcp.resource(name="rooms.get_room_availability", description="Get availability for a specific room.")
-async def get_room_availability(room_id: str, start: str, end: str) -> RoomAvailability:
-    """
-    rooms.getAvailability
-    Get availability for a specific room.
-    """
-    logger.info("Getting room availability", {"room_id": room_id})
-    # TODO: Implement actual API call
-    raise NotImplementedError("rooms.getAvailability not yet implemented")
+# @mcp.resource(name="rooms.get_room_availability", description="Get availability for a specific room.")
+# async def get_room_availability(room_id: str, start: str, end: str) -> RoomAvailability:
+#     """
+#     rooms.getAvailability
+#     Get availability for a specific room.
+#     """
+#     logger.info("Getting room availability", {"room_id": room_id})
+#     # TODO: Implement actual API call
+#     raise NotImplementedError("rooms.getAvailability not yet implemented")
 
 
 @mcp.tool(name="rooms.reserve_room", description="Reserve a meeting room.")
