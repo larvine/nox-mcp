@@ -1,5 +1,6 @@
 """MCP tool handlers for tasks namespace."""
 
+from corp_collab_mcp.common.export import export_tool
 from corp_collab_mcp.utils.logger import Logger
 
 from .types import CreateTaskRequest, SearchTasksRequest, Task, UpdateTaskRequest
@@ -7,6 +8,10 @@ from .types import CreateTaskRequest, SearchTasksRequest, Task, UpdateTaskReques
 logger = Logger("tasks")
 
 
+@export_tool(
+    "tasks.create_task",
+    description="Create a new task or issue.",
+)
 async def create_task(params: CreateTaskRequest) -> Task:
     """
     tasks.create
@@ -18,6 +23,10 @@ async def create_task(params: CreateTaskRequest) -> Task:
     raise NotImplementedError("tasks.create not yet implemented")
 
 
+@export_tool(
+    "tasks.get_task",
+    description="Retrieve a task by identifier.",
+)
 async def get_task(task_id: str) -> Task:
     """
     tasks.get
@@ -28,6 +37,10 @@ async def get_task(task_id: str) -> Task:
     raise NotImplementedError("tasks.get not yet implemented")
 
 
+@export_tool(
+    "tasks.update_task",
+    description="Update fields on an existing task.",
+)
 async def update_task(task_id: str, params: UpdateTaskRequest) -> Task:
     """
     tasks.update
@@ -38,6 +51,10 @@ async def update_task(task_id: str, params: UpdateTaskRequest) -> Task:
     raise NotImplementedError("tasks.update not yet implemented")
 
 
+@export_tool(
+    "tasks.delete_task",
+    description="Delete a task.",
+)
 async def delete_task(task_id: str) -> None:
     """
     tasks.delete
@@ -48,6 +65,10 @@ async def delete_task(task_id: str) -> None:
     raise NotImplementedError("tasks.delete not yet implemented")
 
 
+@export_tool(
+    "tasks.search_tasks",
+    description="Search tasks using query filters.",
+)
 async def search_tasks(params: SearchTasksRequest) -> list[Task]:
     """
     tasks.search
@@ -58,6 +79,10 @@ async def search_tasks(params: SearchTasksRequest) -> list[Task]:
     raise NotImplementedError("tasks.search not yet implemented")
 
 
+@export_tool(
+    "tasks.add_comment",
+    description="Add a comment to a task.",
+)
 async def add_comment(task_id: str, content: str) -> Task:
     """
     tasks.addComment
@@ -68,6 +93,10 @@ async def add_comment(task_id: str, content: str) -> Task:
     raise NotImplementedError("tasks.addComment not yet implemented")
 
 
+@export_tool(
+    "tasks.assign_task",
+    description="Assign a task to a user.",
+)
 async def assign_task(task_id: str, assignee_id: str) -> Task:
     """
     tasks.assign

@@ -1,5 +1,6 @@
 """MCP tool handlers for directory namespace."""
 
+from corp_collab_mcp.common.export import export_tool
 from corp_collab_mcp.utils.logger import Logger
 
 from .types import (
@@ -16,6 +17,10 @@ from .types import (
 logger = Logger("directory")
 
 
+@export_tool(
+    "directory.search_users",
+    description="Search for users in the directory.",
+)
 async def search_users(params: SearchUsersRequest) -> list[DirectoryUser]:
     """
     directory.searchUsers
@@ -26,6 +31,10 @@ async def search_users(params: SearchUsersRequest) -> list[DirectoryUser]:
     raise NotImplementedError("directory.searchUsers not yet implemented")
 
 
+@export_tool(
+    "directory.get_user",
+    description="Get a user by their directory identifier.",
+)
 async def get_user(user_id: str) -> DirectoryUser:
     """
     directory.getUser
@@ -36,6 +45,10 @@ async def get_user(user_id: str) -> DirectoryUser:
     raise NotImplementedError("directory.getUser not yet implemented")
 
 
+@export_tool(
+    "directory.get_user_by_email",
+    description="Get a user by their email address.",
+)
 async def get_user_by_email(email: str) -> DirectoryUser:
     """
     directory.getUserByEmail
@@ -46,6 +59,10 @@ async def get_user_by_email(email: str) -> DirectoryUser:
     raise NotImplementedError("directory.getUserByEmail not yet implemented")
 
 
+@export_tool(
+    "directory.get_user_by_employee_id",
+    description="Get a user by their employee ID.",
+)
 async def get_user_by_employee_id(employee_id: str) -> DirectoryUser:
     """
     directory.getUserByEmployeeId
@@ -56,6 +73,10 @@ async def get_user_by_employee_id(employee_id: str) -> DirectoryUser:
     raise NotImplementedError("directory.getUserByEmployeeId not yet implemented")
 
 
+@export_tool(
+    "directory.resolve_identities",
+    description="Resolve identifiers to canonical directory identities.",
+)
 async def resolve_identities(params: ResolveIdentitiesRequest) -> list[ResolvedIdentity]:
     """
     directory.resolveIdentities
@@ -67,6 +88,10 @@ async def resolve_identities(params: ResolveIdentitiesRequest) -> list[ResolvedI
     raise NotImplementedError("directory.resolveIdentities not yet implemented")
 
 
+@export_tool(
+    "directory.search_groups",
+    description="Search for groups or teams.",
+)
 async def search_groups(params: SearchGroupsRequest) -> list[DirectoryGroup]:
     """
     directory.searchGroups
@@ -77,6 +102,10 @@ async def search_groups(params: SearchGroupsRequest) -> list[DirectoryGroup]:
     raise NotImplementedError("directory.searchGroups not yet implemented")
 
 
+@export_tool(
+    "directory.get_group",
+    description="Get a group by its identifier.",
+)
 async def get_group(group_id: str) -> DirectoryGroup:
     """
     directory.getGroup
@@ -87,6 +116,10 @@ async def get_group(group_id: str) -> DirectoryGroup:
     raise NotImplementedError("directory.getGroup not yet implemented")
 
 
+@export_tool(
+    "directory.get_group_members",
+    description="List members of a group.",
+)
 async def get_group_members(group_id: str) -> list[DirectoryUser]:
     """
     directory.getGroupMembers
@@ -97,6 +130,10 @@ async def get_group_members(group_id: str) -> list[DirectoryUser]:
     raise NotImplementedError("directory.getGroupMembers not yet implemented")
 
 
+@export_tool(
+    "directory.get_org_chart",
+    description="Retrieve the organizational chart for a user.",
+)
 async def get_org_chart(params: GetOrgChartRequest) -> OrgChartNode:
     """
     directory.getOrgChart
@@ -107,6 +144,10 @@ async def get_org_chart(params: GetOrgChartRequest) -> OrgChartNode:
     raise NotImplementedError("directory.getOrgChart not yet implemented")
 
 
+@export_tool(
+    "directory.get_direct_reports",
+    description="Get direct reports for a manager.",
+)
 async def get_direct_reports(user_id: str) -> list[DirectoryUser]:
     """
     directory.getDirectReports

@@ -1,5 +1,6 @@
 """MCP tool handlers for policies namespace."""
 
+from corp_collab_mcp.common.export import export_tool
 from corp_collab_mcp.utils.logger import Logger
 
 from .types import Holiday, PermissionPolicy, RateLimit, SpamPolicy, WorkingHours
@@ -7,6 +8,10 @@ from .types import Holiday, PermissionPolicy, RateLimit, SpamPolicy, WorkingHour
 logger = Logger("policies")
 
 
+@export_tool(
+    "policies.get_working_hours",
+    description="Get working hours for a timezone or user.",
+)
 async def get_working_hours(
     timezone: str | None = None, user_id: str | None = None
 ) -> WorkingHours:
@@ -19,6 +24,10 @@ async def get_working_hours(
     raise NotImplementedError("policies.getWorkingHours not yet implemented")
 
 
+@export_tool(
+    "policies.list_holidays",
+    description="List observed holidays for a region.",
+)
 async def list_holidays(
     year: int, country: str | None = None, region: str | None = None
 ) -> list[Holiday]:
@@ -31,6 +40,10 @@ async def list_holidays(
     raise NotImplementedError("policies.listHolidays not yet implemented")
 
 
+@export_tool(
+    "policies.is_working_day",
+    description="Check whether a date is a working day.",
+)
 async def is_working_day(date: str, timezone: str | None = None) -> bool:
     """
     policies.isWorkingDay
@@ -41,6 +54,10 @@ async def is_working_day(date: str, timezone: str | None = None) -> bool:
     raise NotImplementedError("policies.isWorkingDay not yet implemented")
 
 
+@export_tool(
+    "policies.get_rate_limits",
+    description="Retrieve rate-limit configuration for resources.",
+)
 async def get_rate_limits(resource: str | None = None) -> list[RateLimit]:
     """
     policies.getRateLimits
@@ -51,6 +68,10 @@ async def get_rate_limits(resource: str | None = None) -> list[RateLimit]:
     raise NotImplementedError("policies.getRateLimits not yet implemented")
 
 
+@export_tool(
+    "policies.check_rate_limit",
+    description="Check if a user has exceeded the rate limit.",
+)
 async def check_rate_limit(resource: str, user_id: str) -> dict:
     """
     policies.checkRateLimit
@@ -62,6 +83,10 @@ async def check_rate_limit(resource: str, user_id: str) -> dict:
     raise NotImplementedError("policies.checkRateLimit not yet implemented")
 
 
+@export_tool(
+    "policies.get_spam_policy",
+    description="Retrieve the spam and bulk sending policy.",
+)
 async def get_spam_policy() -> SpamPolicy:
     """
     policies.getSpamPolicy
@@ -72,6 +97,10 @@ async def get_spam_policy() -> SpamPolicy:
     raise NotImplementedError("policies.getSpamPolicy not yet implemented")
 
 
+@export_tool(
+    "policies.check_permission",
+    description="Check if a user can perform an action on a resource.",
+)
 async def check_permission(user_id: str, resource: str, action: str) -> bool:
     """
     policies.checkPermission
@@ -82,6 +111,10 @@ async def check_permission(user_id: str, resource: str, action: str) -> bool:
     raise NotImplementedError("policies.checkPermission not yet implemented")
 
 
+@export_tool(
+    "policies.get_permissions",
+    description="Get all permissions granted to a user.",
+)
 async def get_permissions(user_id: str) -> list[PermissionPolicy]:
     """
     policies.getPermissions

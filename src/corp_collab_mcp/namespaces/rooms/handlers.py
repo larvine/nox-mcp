@@ -1,5 +1,6 @@
 """MCP tool handlers for rooms namespace."""
 
+from corp_collab_mcp.common.export import export_tool
 from corp_collab_mcp.utils.logger import Logger
 
 from .types import (
@@ -13,6 +14,10 @@ from .types import (
 logger = Logger("rooms")
 
 
+@export_tool(
+    "rooms.search_rooms",
+    description="Search for available meeting rooms.",
+)
 async def search_rooms(params: SearchRoomsRequest) -> list[MeetingRoom]:
     """
     rooms.search
@@ -23,6 +28,10 @@ async def search_rooms(params: SearchRoomsRequest) -> list[MeetingRoom]:
     raise NotImplementedError("rooms.search not yet implemented")
 
 
+@export_tool(
+    "rooms.get_room",
+    description="Get meeting room details by identifier.",
+)
 async def get_room(room_id: str) -> MeetingRoom:
     """
     rooms.get
@@ -33,6 +42,10 @@ async def get_room(room_id: str) -> MeetingRoom:
     raise NotImplementedError("rooms.get not yet implemented")
 
 
+@export_tool(
+    "rooms.get_room_availability",
+    description="Get availability for a specific room.",
+)
 async def get_room_availability(room_id: str, start: str, end: str) -> RoomAvailability:
     """
     rooms.getAvailability
@@ -43,6 +56,10 @@ async def get_room_availability(room_id: str, start: str, end: str) -> RoomAvail
     raise NotImplementedError("rooms.getAvailability not yet implemented")
 
 
+@export_tool(
+    "rooms.reserve_room",
+    description="Reserve a meeting room.",
+)
 async def reserve_room(params: ReserveRoomRequest) -> RoomReservation:
     """
     rooms.reserve
@@ -53,6 +70,10 @@ async def reserve_room(params: ReserveRoomRequest) -> RoomReservation:
     raise NotImplementedError("rooms.reserve not yet implemented")
 
 
+@export_tool(
+    "rooms.cancel_reservation",
+    description="Cancel a room reservation.",
+)
 async def cancel_reservation(reservation_id: str) -> None:
     """
     rooms.cancelReservation
@@ -63,6 +84,10 @@ async def cancel_reservation(reservation_id: str) -> None:
     raise NotImplementedError("rooms.cancelReservation not yet implemented")
 
 
+@export_tool(
+    "rooms.list_reservations",
+    description="List room reservations for a user or room.",
+)
 async def list_reservations(
     user_id: str | None = None,
     room_id: str | None = None,
@@ -78,6 +103,10 @@ async def list_reservations(
     raise NotImplementedError("rooms.listReservations not yet implemented")
 
 
+@export_tool(
+    "rooms.check_in",
+    description="Check in to an existing reservation.",
+)
 async def check_in(reservation_id: str) -> RoomReservation:
     """
     rooms.checkIn
