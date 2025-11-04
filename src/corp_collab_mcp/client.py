@@ -52,7 +52,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="FastMCP test client")
     parser.add_argument(
         "--transport",
-        default="http://127.0.0.1:8765",
+        default="http://127.0.0.1:8765/mcp",
         help=(
             "Transport configuration passed to fastmcp.Client. "
             "Can be an HTTP URL, a path/socket, or stdio JSON config."
