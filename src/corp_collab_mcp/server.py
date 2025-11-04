@@ -133,10 +133,11 @@ def main() -> None:
     """Main entry point."""
     settings = get_settings()
     logger.info("Starting Corp Collab MCP Server", {"version": "1.0.0"})
+
+    # Register all namespaces
+    register_namespaces()
     mcp.run()
 
 
 if __name__ == "__main__":
-    # Register all namespaces
-    register_namespaces()
     main()
