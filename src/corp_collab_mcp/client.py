@@ -6,17 +6,22 @@ full MCP runtime.
 
 Usage examples::
 
-    # List tools exposed by an HTTP server (default localhost:8000)
+    # List tools exposed by a WebSocket server (default ws://127.0.0.1:8765)
     python -m corp_collab_mcp.client list-tools
 
     # Call a specific tool with JSON arguments
     python -m corp_collab_mcp.client \
-        --transport http://127.0.0.1:8000 \
+        --transport ws://127.0.0.1:8765 \
         call-tool meetings.list_meetings --args '{"user_id": "abc", "start": "..."}'
 
+    # Use HTTP transport if needed
+    python -m corp_collab_mcp.client \
+        --transport http://127.0.0.1:8000 \
+        list-tools
+
 The client supports any transport understood by :class:`fastmcp.Client`,
-including HTTP endpoints, stdio subprocess configurations, or in-process
-``FastMCP`` instances.
+including WebSocket URLs (ws://), HTTP endpoints, stdio subprocess configurations,
+or in-process ``FastMCP`` instances.
 """
 
 from __future__ import annotations
@@ -52,10 +57,10 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="FastMCP test client")
     parser.add_argument(
         "--transport",
-        default="http://127.0.0.1:5003",
+        default="ws://127.0.0.1:8765",
         help=(
             "Transport configuration passed to fastmcp.Client. "
-            "Can be an HTTP URL, a path/socket, or stdio JSON config."
+            "Can be a WebSocket URL (ws://), an HTTP URL, a path/socket, or stdio JSON config."
         ),
     )
     parser.add_argument(
