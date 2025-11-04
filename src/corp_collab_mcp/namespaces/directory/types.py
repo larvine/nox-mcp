@@ -86,7 +86,7 @@ class SearchGroupsRequest(BaseModel):
 class ResolveIdentitiesRequest(BaseModel):
     """Request to resolve multiple identifiers."""
 
-    identifiers: list[str] = Field(..., min_items=1)
+    identifiers: list[str] = Field(..., min_length=1)
     include_inactive: bool = False
 
 

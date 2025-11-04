@@ -2,7 +2,7 @@
 
 from enum import Enum
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
 class EmailStatus(str, Enum):
@@ -69,8 +69,13 @@ class Email(BaseModel):
     labels: list[str] | None = None
     metadata: dict[str, str] | None = None
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(
+        populate_by_name=True,  # 예전 Config.populate_by_name=True 대체
+        json_schema_extra={
+            "title": "Email",
+            "description": "Email message representation for MCP",
+        },
+    )
 
 
 class EmailThread(BaseModel):
@@ -124,5 +129,10 @@ class SearchEmailsRequest(BaseModel):
     labels: list[str] | None = None
     limit: int = Field(default=20, ge=1, le=100)
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(
+        populate_by_name=True,  # 예전 Config.populate_by_name=True 대체
+        json_schema_extra={
+            "title": "SearchEmailsRequest",
+            "description": "Request to search emails for MCP",
+        },
+    )

@@ -135,6 +135,8 @@ def main() -> None:
 
     # Register all namespaces
     register_namespaces()
+
+    logger.info("Registered successfully", {"version": "1.0.0"})
     mcp.run()
 
 

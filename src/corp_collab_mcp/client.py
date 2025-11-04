@@ -21,6 +21,23 @@ including HTTP endpoints, stdio subprocess configurations, or in-process
 
 from __future__ import annotations
 
+if __name__ == "__main__" and (__package__ is None or __package__ == ""):
+    # Allow `python path/to/client.py` to behave like `python -m corp_collab_mcp.client`
+    import importlib
+    import os
+    import sys
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    if script_dir in sys.path:
+        sys.path.remove(script_dir)
+
+    package_root = os.path.dirname(script_dir)
+    if package_root not in sys.path:
+        sys.path.insert(0, package_root)
+
+    module = importlib.import_module("corp_collab_mcp.client")
+    raise SystemExit(module.main())
+
 import argparse
 import asyncio
 import json
@@ -35,7 +52,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="FastMCP test client")
     parser.add_argument(
         "--transport",
-        default="http://127.0.0.1:8000",
+        default="http://127.0.0.1:5003",
         help=(
             "Transport configuration passed to fastmcp.Client. "
             "Can be an HTTP URL, a path/socket, or stdio JSON config."
@@ -131,7 +148,9 @@ def _dump_json(payload: Any) -> None:
     print(json.dumps(_normalize(payload), ensure_ascii=False, indent=2))
 
 
-async def _with_client(args: argparse.Namespace, callback: Callable[[Client, argparse.Namespace], Any]) -> Any:
+async def _with_client(
+    args: argparse.Namespace, callback: Callable[[Client, argparse.Namespace], Any]
+) -> Any:
     client = Client(
         args.transport,
         timeout=args.timeout,
