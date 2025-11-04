@@ -1,5 +1,13 @@
 """MCP Server implementation using FastMCP."""
 
+import inspect
+import pkgutil
+from collections.abc import Callable
+from importlib import import_module
+from importlib.util import find_spec
+from pathlib import Path
+from types import ModuleType
+
 from fastmcp import FastMCP
 
 from corp_collab_mcp.config import get_settings
@@ -10,123 +18,95 @@ logger = Logger("server")
 # Initialize FastMCP server
 mcp = FastMCP("corp-collab-mcp")
 
+_HANDLERS_MODULE_NAME = "handlers"
+_DEFAULT_NAMESPACE_ORDER = (
+    "meetings",
+    "rooms",
+    "mail",
+    "directory",
+    "tasks",
+    "docs",
+    "policies",
+    "utils",
+)
+
+
+def _namespace_sort_key(namespace: str) -> tuple[int, int | str]:
+    try:
+        return (0, _DEFAULT_NAMESPACE_ORDER.index(namespace))
+    except ValueError:
+        return (1, namespace)
+
+
+def _iter_public_handlers(module: ModuleType) -> list[Callable[..., object]]:
+    handlers: list[Callable[..., object]] = []
+    for name, member in module.__dict__.items():
+        if name.startswith("_"):
+            continue
+        if not (inspect.isfunction(member) or inspect.iscoroutinefunction(member)):
+            continue
+        if getattr(member, "__module__", "") != module.__name__:
+            continue
+        handlers.append(member)
+    return handlers
+
+
+def _discover_namespace_handler_modules() -> list[tuple[str, ModuleType]]:
+    namespaces_pkg = import_module("corp_collab_mcp.namespaces")
+    package_path = Path(namespaces_pkg.__file__).parent
+
+    discovered: dict[str, ModuleType] = {}
+    for module_info in pkgutil.iter_modules([str(package_path)]):
+        if not module_info.ispkg or module_info.name.startswith("_"):
+            continue
+
+        namespace = module_info.name
+        module_name = f"{namespaces_pkg.__name__}.{namespace}.{_HANDLERS_MODULE_NAME}"
+
+        if find_spec(module_name) is None:
+            logger.debug(
+                "Skipping namespace without handlers module",
+                {"namespace": namespace},
+            )
+            continue
+
+        handlers_module = import_module(module_name)
+        discovered[namespace] = handlers_module
+
+    return sorted(discovered.items(), key=lambda item: _namespace_sort_key(item[0]))
+
 
 # Import and register namespace tools
 def register_namespaces() -> None:
-    """Register all namespace tools."""
-    from corp_collab_mcp.namespaces import (
-        directory,
-        docs,
-        mail,
-        meetings,
-        policies,
-        rooms,
-        tasks,
+    """Register all namespace tools discovered in the namespaces package."""
+
+    total_tools_registered = 0
+    namespaces_with_handlers = 0
+
+    for namespace, handlers_module in _discover_namespace_handler_modules():
+        handlers = _iter_public_handlers(handlers_module)
+
+        if not handlers:
+            logger.warning(
+                "No handlers found for namespace",
+                {"namespace": namespace},
+            )
+            continue
+
+        namespaces_with_handlers += 1
+
+        for handler in handlers:
+            tool_name = f"{namespace}.{handler.__name__}"
+            mcp.tool(name=tool_name)(handler)
+            total_tools_registered += 1
+
+    logger.info(
+        "Registered namespace tools",
+        {
+            "namespaces": namespaces_with_handlers,
+            "tools": total_tools_registered,
+        },
     )
-    from corp_collab_mcp.namespaces import utils as ns_utils
-
-    # Register meetings tools
-    for handler in [
-        meetings.handlers.create_meeting,
-        meetings.handlers.get_meeting,
-        meetings.handlers.update_meeting,
-        meetings.handlers.cancel_meeting,
-        meetings.handlers.list_meetings,
-        meetings.handlers.find_available_slots,
-        meetings.handlers.get_availability,
-    ]:
-        mcp.tool(name=f"meetings.{handler.__name__}")(handler)
-
-    # Register rooms tools
-    for handler in [
-        rooms.handlers.search_rooms,
-        rooms.handlers.get_room,
-        rooms.handlers.get_room_availability,
-        rooms.handlers.reserve_room,
-        rooms.handlers.cancel_reservation,
-        rooms.handlers.list_reservations,
-        rooms.handlers.check_in,
-    ]:
-        mcp.tool(name=f"rooms.{handler.__name__}")(handler)
-
-    # Register mail tools
-    for handler in [
-        mail.handlers.send_email,
-        mail.handlers.create_draft,
-        mail.handlers.update_draft,
-        mail.handlers.send_draft,
-        mail.handlers.delete_draft,
-        mail.handlers.get_email,
-        mail.handlers.get_thread,
-        mail.handlers.search_emails,
-        mail.handlers.reply_to_email,
-        mail.handlers.forward_email,
-    ]:
-        mcp.tool(name=f"mail.{handler.__name__}")(handler)
-
-    # Register directory tools
-    for handler in [
-        directory.handlers.search_users,
-        directory.handlers.get_user,
-        directory.handlers.get_user_by_email,
-        directory.handlers.get_user_by_employee_id,
-        directory.handlers.resolve_identities,
-        directory.handlers.search_groups,
-        directory.handlers.get_group,
-        directory.handlers.get_group_members,
-        directory.handlers.get_org_chart,
-        directory.handlers.get_direct_reports,
-    ]:
-        mcp.tool(name=f"directory.{handler.__name__}")(handler)
-
-    # Register tasks tools
-    for handler in [
-        tasks.handlers.create_task,
-        tasks.handlers.get_task,
-        tasks.handlers.update_task,
-        tasks.handlers.delete_task,
-        tasks.handlers.search_tasks,
-        tasks.handlers.add_comment,
-        tasks.handlers.assign_task,
-    ]:
-        mcp.tool(name=f"tasks.{handler.__name__}")(handler)
-
-    # Register docs tools
-    for handler in [
-        docs.handlers.search_docs,
-        docs.handlers.get_doc,
-        docs.handlers.get_doc_permissions,
-        docs.handlers.share_doc,
-        docs.handlers.check_access,
-        docs.handlers.revoke_access,
-    ]:
-        mcp.tool(name=f"docs.{handler.__name__}")(handler)
-
-    # Register policies tools
-    for handler in [
-        policies.handlers.get_working_hours,
-        policies.handlers.list_holidays,
-        policies.handlers.is_working_day,
-        policies.handlers.get_rate_limits,
-        policies.handlers.check_rate_limit,
-        policies.handlers.get_spam_policy,
-        policies.handlers.check_permission,
-        policies.handlers.get_permissions,
-    ]:
-        mcp.tool(name=f"policies.{handler.__name__}")(handler)
-
-    # Register utils tools
-    for handler in [
-        ns_utils.handlers.convert_timezone,
-        ns_utils.handlers.get_timezone_info,
-        ns_utils.handlers.list_timezones,
-        ns_utils.handlers.generate_ics,
-        ns_utils.handlers.parse_ics,
-        ns_utils.handlers.health_check,
-        ns_utils.handlers.generate_idempotency_key,
-        ns_utils.handlers.validate_idempotency_key,
-    ]:
-        mcp.tool(name=f"utils.{handler.__name__}")(handler)
 
 
 def main() -> None:
