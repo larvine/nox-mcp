@@ -64,7 +64,10 @@ async def cancel_reservation(reservation_id: str) -> None:
 
 
 async def list_reservations(
-    user_id: str | None = None, room_id: str | None = None, start: str | None = None, end: str | None = None
+    user_id: str | None = None,
+    room_id: str | None = None,
+    start: str | None = None,
+    end: str | None = None,
 ) -> list[RoomReservation]:
     """
     rooms.listReservations

@@ -7,7 +7,9 @@ from .types import Holiday, PermissionPolicy, RateLimit, SpamPolicy, WorkingHour
 logger = Logger("policies")
 
 
-async def get_working_hours(timezone: str | None = None, user_id: str | None = None) -> WorkingHours:
+async def get_working_hours(
+    timezone: str | None = None, user_id: str | None = None
+) -> WorkingHours:
     """
     policies.getWorkingHours
     Get working hours for a timezone or user.
@@ -17,7 +19,9 @@ async def get_working_hours(timezone: str | None = None, user_id: str | None = N
     raise NotImplementedError("policies.getWorkingHours not yet implemented")
 
 
-async def list_holidays(year: int, country: str | None = None, region: str | None = None) -> list[Holiday]:
+async def list_holidays(
+    year: int, country: str | None = None, region: str | None = None
+) -> list[Holiday]:
     """
     policies.listHolidays
     List holidays for a year/region.

@@ -81,50 +81,50 @@ def register_namespaces() -> None:
 
     # Register tasks tools
     for handler in [
-    tasks.handlers.create_task,
-    tasks.handlers.get_task,
-    tasks.handlers.update_task,
-    tasks.handlers.delete_task,
-    tasks.handlers.search_tasks,
-    tasks.handlers.add_comment,
-    tasks.handlers.assign_task,
+        tasks.handlers.create_task,
+        tasks.handlers.get_task,
+        tasks.handlers.update_task,
+        tasks.handlers.delete_task,
+        tasks.handlers.search_tasks,
+        tasks.handlers.add_comment,
+        tasks.handlers.assign_task,
     ]:
         mcp.tool(name=f"tasks.{handler.__name__}")(handler)
 
     # Register docs tools
     for handler in [
-    docs.handlers.search_docs,
-    docs.handlers.get_doc,
-    docs.handlers.get_doc_permissions,
-    docs.handlers.share_doc,
-    docs.handlers.check_access,
-    docs.handlers.revoke_access,
+        docs.handlers.search_docs,
+        docs.handlers.get_doc,
+        docs.handlers.get_doc_permissions,
+        docs.handlers.share_doc,
+        docs.handlers.check_access,
+        docs.handlers.revoke_access,
     ]:
         mcp.tool(name=f"docs.{handler.__name__}")(handler)
 
     # Register policies tools
     for handler in [
-    policies.handlers.get_working_hours,
-    policies.handlers.list_holidays,
-    policies.handlers.is_working_day,
-    policies.handlers.get_rate_limits,
-    policies.handlers.check_rate_limit,
-    policies.handlers.get_spam_policy,
-    policies.handlers.check_permission,
-    policies.handlers.get_permissions,
+        policies.handlers.get_working_hours,
+        policies.handlers.list_holidays,
+        policies.handlers.is_working_day,
+        policies.handlers.get_rate_limits,
+        policies.handlers.check_rate_limit,
+        policies.handlers.get_spam_policy,
+        policies.handlers.check_permission,
+        policies.handlers.get_permissions,
     ]:
         mcp.tool(name=f"policies.{handler.__name__}")(handler)
 
     # Register utils tools
     for handler in [
-    ns_utils.handlers.convert_timezone,
-    ns_utils.handlers.get_timezone_info,
-    ns_utils.handlers.list_timezones,
-    ns_utils.handlers.generate_ics,
-    ns_utils.handlers.parse_ics,
-    ns_utils.handlers.health_check,
-    ns_utils.handlers.generate_idempotency_key,
-    ns_utils.handlers.validate_idempotency_key,
+        ns_utils.handlers.convert_timezone,
+        ns_utils.handlers.get_timezone_info,
+        ns_utils.handlers.list_timezones,
+        ns_utils.handlers.generate_ics,
+        ns_utils.handlers.parse_ics,
+        ns_utils.handlers.health_check,
+        ns_utils.handlers.generate_idempotency_key,
+        ns_utils.handlers.validate_idempotency_key,
     ]:
         mcp.tool(name=f"utils.{handler.__name__}")(handler)
 
