@@ -1,6 +1,6 @@
 """MCP tool handlers for docs namespace."""
 
-from corp_collab_mcp.common.export import export_tool
+from corp_collab_mcp.app import mcp
 from corp_collab_mcp.utils.logger import Logger
 
 from .types import Document, DocumentPermission, SearchDocsRequest, ShareDocRequest
@@ -8,10 +8,7 @@ from .types import Document, DocumentPermission, SearchDocsRequest, ShareDocRequ
 logger = Logger("docs")
 
 
-@export_tool(
-    "docs.search_docs",
-    description="Search for documents by query.",
-)
+@mcp.tool(name="docs.search_docs", description="Search for documents by query.")
 async def search_docs(params: SearchDocsRequest) -> list[Document]:
     """
     docs.search
@@ -22,10 +19,7 @@ async def search_docs(params: SearchDocsRequest) -> list[Document]:
     raise NotImplementedError("docs.search not yet implemented")
 
 
-@export_tool(
-    "docs.get_doc",
-    description="Get a document by its identifier.",
-)
+@mcp.resource(name="docs.get_doc", description="Get a document by its identifier.")
 async def get_doc(doc_id: str) -> Document:
     """
     docs.get
@@ -36,10 +30,7 @@ async def get_doc(doc_id: str) -> Document:
     raise NotImplementedError("docs.get not yet implemented")
 
 
-@export_tool(
-    "docs.get_doc_permissions",
-    description="Fetch the permission entries for a document.",
-)
+@mcp.resource(name="docs.get_doc_permissions", description="Fetch the permission entries for a document.")
 async def get_doc_permissions(doc_id: str) -> list[DocumentPermission]:
     """
     docs.getPermissions
@@ -50,10 +41,7 @@ async def get_doc_permissions(doc_id: str) -> list[DocumentPermission]:
     raise NotImplementedError("docs.getPermissions not yet implemented")
 
 
-@export_tool(
-    "docs.share_doc",
-    description="Share a document with users or groups.",
-)
+@mcp.tool(name="docs.share_doc", description="Share a document with users or groups.")
 async def share_doc(params: ShareDocRequest) -> Document:
     """
     docs.share
@@ -64,10 +52,7 @@ async def share_doc(params: ShareDocRequest) -> Document:
     raise NotImplementedError("docs.share not yet implemented")
 
 
-@export_tool(
-    "docs.check_access",
-    description="Check whether a user has access to a document.",
-)
+@mcp.resource(name="docs.check_access", description="Check whether a user has access to a document.")
 async def check_access(doc_id: str, user_id: str) -> bool:
     """
     docs.checkAccess
@@ -78,10 +63,7 @@ async def check_access(doc_id: str, user_id: str) -> bool:
     raise NotImplementedError("docs.checkAccess not yet implemented")
 
 
-@export_tool(
-    "docs.revoke_access",
-    description="Revoke a user's access to a document.",
-)
+@mcp.tool(name="docs.revoke_access", description="Revoke a user's access to a document.")
 async def revoke_access(doc_id: str, user_id: str) -> None:
     """
     docs.revokeAccess

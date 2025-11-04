@@ -1,19 +1,70 @@
 """MCP Server implementation using FastMCP."""
 
-from fastmcp import FastMCP
+import pkgutil
+from importlib import import_module
+from importlib.util import find_spec
+from pathlib import Path
 
+from corp_collab_mcp.app import mcp
 from corp_collab_mcp.config import get_settings
-from corp_collab_mcp.registry import register_all
 from corp_collab_mcp.utils.logger import Logger
 
 logger = Logger("server")
 
-# Initialize FastMCP server
-mcp = FastMCP("corp-collab-mcp")
+_HANDLERS_MODULE_NAME = "handlers"
+_DEFAULT_NAMESPACE_ORDER = (
+    "meetings",
+    "rooms",
+    "mail",
+    "directory",
+    "tasks",
+    "docs",
+    "policies",
+    "utils",
+)
+
+
+def _namespace_sort_key(namespace: str) -> tuple[int, int | str]:
+    try:
+        return (0, _DEFAULT_NAMESPACE_ORDER.index(namespace))
+    except ValueError:
+        return (1, namespace)
+
+
+def _discover_namespace_handler_modules() -> list[str]:
+    namespaces_pkg = import_module("corp_collab_mcp.namespaces")
+    package_path = Path(namespaces_pkg.__file__).parent
+
+    discovered: list[str] = []
+    for module_info in pkgutil.iter_modules([str(package_path)]):
+        if not module_info.ispkg or module_info.name.startswith("_"):
+            continue
+
+        namespace = module_info.name
+        module_name = f"{namespaces_pkg.__name__}.{namespace}.{_HANDLERS_MODULE_NAME}"
+
+        if find_spec(module_name) is None:
+            logger.debug("Skipping namespace without handlers module", {"namespace": namespace})
+            continue
+
+        discovered.append(module_name)
+
+    discovered.sort(key=lambda module_name: _namespace_sort_key(module_name.split(".")[-2]))
+    return discovered
 
 
 def register_namespaces() -> None:
-    register_all(mcp)
+    modules = _discover_namespace_handler_modules()
+    for module_name in modules:
+        try:
+            import_module(module_name)
+        except Exception as exc:
+            logger.exception(
+                "Failed to import handlers module",
+                {"module": module_name, "error": str(exc)},
+            )
+
+    logger.info("Registered namespace handlers", {"modules": len(modules)})
 
 
 def main() -> None:
