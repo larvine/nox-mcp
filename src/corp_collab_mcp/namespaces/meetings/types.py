@@ -71,7 +71,7 @@ class CreateMeetingRequest(BaseModel):
 
     title: str = Field(..., min_length=1)
     description: str | None = None
-    attendees: list[str] = Field(..., min_items=1)  # User IDs or emails
+    attendees: list[str] = Field(..., min_length=1)  # User IDs or emails
     time_range: TimeRange
     location: str | None = None
     recurrence: RecurrencePattern | None = None
@@ -80,7 +80,7 @@ class CreateMeetingRequest(BaseModel):
 class FindSlotsRequest(BaseModel):
     """Request to find available time slots."""
 
-    attendees: list[str] = Field(..., min_items=1)
+    attendees: list[str] = Field(..., min_length=1)
     duration: int = Field(..., ge=1, description="Duration in minutes")
     time_range: TimeRange
     preferred_times: list[str] | None = Field(
