@@ -38,6 +38,11 @@ class Settings(BaseSettings):
     enable_spam_filter: bool = Field(default=True, env="ENABLE_SPAM_FILTER")
     enable_rate_limiting: bool = Field(default=True, env="ENABLE_RATE_LIMITING")
 
+    # WebSocket Server Configuration
+    ws_host: str = Field(default="0.0.0.0", env="WS_HOST")
+    ws_port: int = Field(default=8765, env="WS_PORT")
+    transport: str = Field(default="ws", env="TRANSPORT")  # 'stdio' or 'ws'
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

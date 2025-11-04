@@ -1,5 +1,7 @@
 """MCP Server implementation using FastMCP."""
 
+import asyncio
+
 from fastmcp import FastMCP
 
 from corp_collab_mcp.config import get_settings
@@ -112,8 +114,16 @@ register_namespaces()
 def main() -> None:
     """Main entry point."""
     settings = get_settings()
-    logger.info("Starting Corp Collab MCP Server", {"version": "1.0.0"})
-    mcp.run()
+    logger.info("Starting Corp Collab MCP Server", {"version": "1.0.0", "transport": settings.transport})
+
+    if settings.transport == "ws":
+        logger.info(f"Starting WebSocket server on {settings.ws_host}:{settings.ws_port}")
+        # Run with WebSocket transport
+        mcp.run(transport="ws", host=settings.ws_host, port=settings.ws_port)
+    else:
+        logger.info("Starting with stdio transport")
+        # Run with stdio transport (default)
+        mcp.run()
 
 
 if __name__ == "__main__":
