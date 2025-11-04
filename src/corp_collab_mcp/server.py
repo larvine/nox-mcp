@@ -1,8 +1,6 @@
 """MCP Server implementation using FastMCP."""
 
-import asyncio
 import inspect
-import json
 import pkgutil
 from collections.abc import Callable
 from importlib import import_module
@@ -10,7 +8,6 @@ from importlib.util import find_spec
 from pathlib import Path
 from types import ModuleType
 
-import websockets
 from fastmcp import FastMCP
 
 from corp_collab_mcp.config import get_settings
@@ -131,57 +128,6 @@ def register_namespaces() -> None:
     )
 
 
-async def handle_websocket_connection(websocket, path=None):
-    """Handle WebSocket connection."""
-    logger.info("New WebSocket connection", {"remote": websocket.remote_address})
-
-    try:
-        async for message in websocket:
-            try:
-                # Parse incoming JSON-RPC message
-                request = json.loads(message)
-                logger.debug("Received request", {"method": request.get("method")})
-
-                # Forward to FastMCP internal handler
-                # FastMCP's mcp._app handles the MCP protocol
-                response = await mcp._app.handle_request(request)
-
-                # Send response back
-                await websocket.send(json.dumps(response))
-
-            except json.JSONDecodeError as e:
-                logger.error("Invalid JSON", {"error": str(e)})
-                error_response = {
-                    "jsonrpc": "2.0",
-                    "error": {"code": -32700, "message": "Parse error"},
-                    "id": None
-                }
-                await websocket.send(json.dumps(error_response))
-            except Exception as e:
-                logger.error("Error handling request", {"error": str(e)})
-                error_response = {
-                    "jsonrpc": "2.0",
-                    "error": {"code": -32603, "message": "Internal error"},
-                    "id": request.get("id")
-                }
-                await websocket.send(json.dumps(error_response))
-
-    except websockets.exceptions.ConnectionClosed:
-        logger.info("WebSocket connection closed")
-    except Exception as e:
-        logger.error("WebSocket error", {"error": str(e)})
-
-
-async def run_websocket_server(host: str, port: int):
-    """Run WebSocket server."""
-    logger.info(f"Starting WebSocket server on {host}:{port}")
-
-    async with websockets.serve(handle_websocket_connection, host, port):
-        logger.info(f"WebSocket server running on ws://{host}:{port}")
-        # Keep server running
-        await asyncio.Future()
-
-
 def main() -> None:
     """Main entry point."""
     settings = get_settings()
@@ -192,10 +138,10 @@ def main() -> None:
 
     logger.info("Registered successfully", {"version": "1.0.0"})
 
-    if settings.transport == "ws":
-        logger.info(f"Starting WebSocket server on {settings.ws_host}:{settings.ws_port}")
-        # Run with WebSocket transport
-        asyncio.run(run_websocket_server(settings.ws_host, settings.ws_port))
+    if settings.transport == "http":
+        logger.info(f"Starting HTTP server on {settings.ws_host}:{settings.ws_port}")
+        # Run with HTTP transport (FastMCP built-in HTTP server)
+        mcp.run(transport="http", host=settings.ws_host, port=settings.ws_port)
     else:
         logger.info("Starting with stdio transport")
         # Run with stdio transport (default)

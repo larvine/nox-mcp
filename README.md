@@ -202,15 +202,15 @@ LOG_FORMAT=json
 이 서버는 두 가지 통신 방식을 지원합니다:
 
 1. **stdio (표준 입출력)**: MCP 클라이언트와 프로세스 간 통신
-2. **WebSocket**: 네트워크를 통한 통신
+2. **HTTP**: 네트워크를 통한 통신 (FastMCP 내장 HTTP 서버)
 
 `.env` 파일에서 `TRANSPORT` 설정으로 선택할 수 있습니다.
 
-### WebSocket 모드 (권장)
+### HTTP 모드 (권장)
 
 ```bash
 # .env 파일 설정
-TRANSPORT=ws
+TRANSPORT=http
 WS_HOST=0.0.0.0
 WS_PORT=8765
 
@@ -218,7 +218,7 @@ WS_PORT=8765
 python -m corp_collab_mcp.server
 ```
 
-서버가 `ws://0.0.0.0:8765`에서 실행됩니다.
+서버가 `http://0.0.0.0:8765`에서 실행됩니다.
 
 ### stdio 모드
 
@@ -230,15 +230,26 @@ TRANSPORT=stdio
 python -m corp_collab_mcp.server
 ```
 
-### MCP 클라이언트와 함께 사용
+### FastMCP 클라이언트로 테스트
 
-#### WebSocket 사용 시
+```bash
+# 툴 목록 확인
+python -m corp_collab_mcp.client list-tools
+
+# 툴 호출
+python -m corp_collab_mcp.client call-tool meetings.list_meetings \
+  --args '{"user_id": "user123", "start": "2025-01-01", "end": "2025-01-31"}'
+```
+
+### MCP 클라이언트 설정
+
+#### HTTP 사용 시 (Claude Desktop 등)
 
 ```json
 {
   "mcpServers": {
     "corp-collab": {
-      "url": "ws://localhost:8765",
+      "url": "http://localhost:8765",
       "env": {
         "CORP_API_KEY": "your_key_here"
       }
